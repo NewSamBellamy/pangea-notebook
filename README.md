@@ -1,5 +1,7 @@
-# Pangea demo (GitHub Pages)
+# Pangea (deploy)
 
-Password-gated demo build for private walkthroughs.
+Invite-only demo build.
 
-Cloud save uses the dedicated Supabase project **Pangea**.
+Public landing: https://newsambellamy.github.io/Hidden-Door-Landing-Page/
+
+Do not store passwords in this branch.
