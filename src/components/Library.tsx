@@ -1,6 +1,7 @@
 /**
  * The Study — the app's home screen. A fixed-aspect photoreal backdrop
- * (src/assets/study.jpg) with the empty center bookcase bays filled by:
+ * (src/assets/studyImage.ts — a base64 data URL, see that file for why)
+ * with the empty center bookcase bays filled by:
  * - every real Book as a clickable spine (ShelfSpine, oldest-first), and
  * - procedural warm "filler" spines (FillerSpine) so the case always
  *   reads as a full, lived-in library regardless of how many books exist.
@@ -17,7 +18,7 @@ import * as ai from '../ai';
 import type { Book } from '../types';
 import { Book3D } from './Book3D';
 import { FocusPanel } from './FocusPanel';
-import studyBg from '../assets/study.jpg';
+import { studyImageDataUrl as studyBg } from '../assets/studyImage';
 
 const fmtDate = (t?: number) => (t ? new Date(t).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '—');
 const fmtAgo = (t?: number) => {
