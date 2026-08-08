@@ -23,14 +23,22 @@ async function pickTool(x, y, title) {
 }
 
 await page.goto('http://localhost:4173');
-await page.waitForTimeout(1200);
+await page.waitForTimeout(800);
+if (await page.locator('#demo-pass').count()) {
+  await page.locator('#demo-pass').fill('PangeaDemo2026');
+  await page.locator('.app-gate-card button[type="submit"]').click();
+  await page.waitForTimeout(700);
+}
 
 // 1. The study
 ok('study renders with desk book', await page.locator('.desk-book').count() === 1);
 ok('study scene present', await page.locator('.stage-bg').count() === 1);
 
-// 2. Open book from the desk -> cover + TOC
+// 2. Desk book opens its preview first; the creator explicitly opens the book from there.
 await page.locator('.desk-book').click();
+await page.waitForTimeout(350);
+ok('desk book opens a preview', await page.locator('.focus-panel').count() === 1);
+await page.locator('.focus-actions .btn-gold', { hasText: 'Open the book' }).click();
 await page.waitForTimeout(700);
 ok('cover shows title', await page.locator('.cover-frame h1', { hasText: 'The Argo Protocol' }).count() === 1);
 ok('TOC shows 16 rows', await page.locator('.toc-row').count() === 16);
@@ -46,11 +54,15 @@ ok('page 1 heading', await page.locator('.pg-h', { hasText: 'The Premise' }).cou
 ok('edge toolbar removed', await page.locator('.edge-tools').count() === 0);
 ok('audit button at top of page', await page.locator('.audit-btn').count() === 1);
 
-// 5. Scribe applies a change
+// 5. Scribe proposes first; the canvas stays unchanged until the creator approves.
 await page.locator('.chat-input textarea').fill('add a beat where the parrot learns to code');
 await page.locator('.chat-send').click();
 await page.waitForTimeout(2200);
-ok('scribe applied to canvas', (await page.locator('.pg-p').allTextContents()).some((t) => t.includes('parrot')));
+ok('scribe shows an approval gate', await page.locator('.proposal-card').count() === 1);
+ok('scribe does not mutate before approval', !(await page.locator('.pg-p').allTextContents()).some((t) => t.includes('parrot')));
+await page.locator('.proposal-card .btn-gold').click();
+await page.waitForTimeout(700);
+ok('approved scribe proposal updates the canvas', (await page.locator('.pg-p').allTextContents()).some((t) => t.includes('parrot')));
 
 // 6. Radial-driven annotation + scrolling with tool active
 await pickTool(350, 400, 'Red pen');
@@ -84,28 +96,32 @@ ok('sticky note pinned', await page.locator('.sticky').count() >= 1);
 await page.locator('.audit-btn').click();
 await page.waitForTimeout(400);
 ok('audit strip shows', await page.locator('.audit-strip').count() === 1);
-ok('floating end-audit button present', await page.locator('.audit-fab').count() === 1);
+ok('bottom end-audit button present', await page.locator('.audit-end-bottom').count() === 1);
 await pickTool(350, 460, 'Highlighter');
 await page.mouse.move(box.x + 220, box.y + 500);
 await page.mouse.down();
 await page.mouse.move(box.x + 500, box.y + 505, { steps: 10 });
 await page.mouse.up();
 await page.waitForTimeout(300);
-await page.locator('.audit-btn.recording').click();
+await page.locator('.audit-end-bottom').click({ force: true });
 await page.waitForTimeout(1200);
 ok('audit compiled banner', await page.locator('.audit-pending').count() === 1);
+ok('session ink clears into the audit packet', await page.locator('.ann-layer path').count() === 1);
 const prefill = await page.locator('.chat-input textarea').inputValue();
 ok('scribe input prefilled with audit', prefill.includes('audit') || prefill.includes('Audit'));
 await page.locator('.chat-input textarea').fill(prefill + ' Also make the opening punchier.');
 await page.locator('.chat-send').click();
 await page.waitForTimeout(2400);
-ok('audit applied badge', await page.locator('.bubble-badge.audit').count() >= 1);
+ok('audit requires approval', await page.locator('.proposal-card').count() === 1);
+await page.locator('.proposal-card .btn-gold').click();
+await page.waitForTimeout(800);
+ok('approved audit shows applied badge', await page.locator('.bubble-badge.audit').count() >= 1);
 
 // 9. Image studio still works (tool reset after audit)
 ok('tool auto-reset after audit', (await page.locator('.ann-layer.active').count()) === 0);
 await page.locator('.pg-fig img').first().click();
 await page.waitForTimeout(500);
-ok('image studio opens', await page.locator('.imgstudio-canvas').count() === 1);
+ok('image studio opens on image click', await page.locator('.imgstudio-canvas').count() === 1);
 const c = await page.locator('.imgstudio-canvas').boundingBox();
 await page.mouse.move(c.x + 100, c.y + 100);
 await page.mouse.down();
@@ -123,6 +139,19 @@ await page.locator('.chat-input textarea').fill('what are the best AI video tool
 await page.locator('.chat-send').click();
 await page.waitForTimeout(1800);
 ok('research desk responds', (await page.locator('.bubble.model').last().textContent()).length > 20);
+const canvasBeforeDeepResearch = await page.locator('.page-content').innerText();
+await page.locator('.ropt', { hasText: 'Deep research' }).click();
+await page.locator('.chat-input textarea').fill('research whether pirate founders make a compelling startup premise');
+await page.locator('.chat-send').click();
+await page.waitForTimeout(1800);
+ok('research remains non-destructive', (await page.locator('.page-content').innerText()) === canvasBeforeDeepResearch);
+await page.locator('.chat-tabs button', { hasText: 'Assets' }).click();
+await page.waitForTimeout(250);
+await page.locator('.report-row').first().click();
+await page.waitForTimeout(250);
+await page.locator('.report-doc .btn-outline', { hasText: 'Clip to Scribe' }).click();
+await page.waitForTimeout(250);
+ok('research can be clipped to Scribe', await page.locator('.scribe-clip').count() === 1);
 
 // 10b. Create tab (atelier) — generate an image asset in demo mode
 await page.locator('.chat-tabs button', { hasText: 'Create' }).click();
@@ -178,14 +207,16 @@ await page.locator('.dump-box .btn-gold', { hasText: 'Pin all' }).click();
 await page.waitForTimeout(500);
 ok('notes sorted into book', await page.locator('.noterow').count() >= 4);
 
-// 15. New book: X button + detail gate + binder carousel
+// 15. New book: quill launcher + title/brief gate + binder carousel
 await page.locator('.btn-ghost', { hasText: 'Library' }).click();
 await page.waitForTimeout(500);
-await page.locator('.journal').click();
-await page.waitForTimeout(400);
+await page.locator('.quill-launch').click();
+await page.waitForTimeout(550);
 ok('X close button on new book', await page.locator('.nb-close').count() === 1);
 await page.locator('.nb-prompt').fill('Short idea.');
-ok('quick path gated on detail', await page.locator('.nb-actions .btn-gold').isDisabled());
+ok('outline requires a title', await page.locator('.nb-actions .btn-gold').isDisabled());
+await page.locator('.nb-vibe').fill('Signalkeeper');
+ok('short brief can create an outline once titled', !(await page.locator('.nb-actions .btn-gold').isDisabled()));
 await page.locator('.nb-prompt').fill('A graphic novel about a lighthouse keeper on a forgotten northern coast who collects lost radio signals from parallel worlds, archiving each one in a logbook until one signal starts answering back and asking about her.');
 await page.locator('.swatch').nth(3).click();
 await page.locator('.nb-actions .btn-gold').click();
