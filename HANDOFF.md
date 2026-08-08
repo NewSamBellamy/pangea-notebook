@@ -121,21 +121,25 @@ so the Logs tab stays meaningful.
   prior thread notes for what was tried (procedural clothbound-hardcover
   geometry, canvas-textured cloth/spine-foil/cover-art, shelf-alcove
   environment, spring-damped pull animation) so you don't repeat dead ends.
-- **The study backdrop (`src/assets/study.jpg`) is an AI-generated image**,
-  not a photo. If you need a variant (different time of day, etc.), the
-  original generation prompt is preserved in thread history — regenerate
-  rather than hand-editing the JPEG.
+- **The study backdrop is an AI-generated image**, not a photo, stored as
+  `src/assets/studyImage.ts` — a plain-text module exporting a base64
+  `data:image/jpeg` URL, NOT a binary `.jpg` file. This is deliberate: the
+  GitHub push path available in this environment corrupts raw binary file
+  uploads (confirmed twice — once it double-base64-encoded a `.jpg`, once
+  it UTF-8-inflated a latin1-mapped byte string, both producing a garbage
+  blob on GitHub). Storing the asset as base64 text sidesteps the problem
+  entirely and costs nothing at runtime, since the production build
+  already inlines every asset as base64 into one HTML file anyway
+  (`vite-plugin-singlefile`). **Don't reintroduce a binary asset file
+  without first confirming your push path actually preserves binary
+  bytes** (push a small test file and diff it back) — if you can't
+  confirm that, keep using the base64-module pattern.
 - **Testing requires real browser verification, not just headless
   screenshots at one viewport.** Several regressions (page-flip geometry,
   responsive layout collapsing under ~900px, panel clipping) were only
   caught by testing at the actual size the user was viewing in (often a
   ~880px artifact-preview iframe, not a full browser tab). When in doubt,
   test at 880px width AND 1440px+ before calling something done.
-- **The GitHub repo image asset:** `src/assets/study.jpg` is a binary file.
-  Verify after any GitHub push that it made it through as an intact
-  binary (not corrupted by a text-mode API call) — see the repo's
-  `study.jpg` file size/preview on GitHub, or fetch it and check the file
-  signature, before assuming it's fine.
 
 ## What's been audited and fixed (chronological, so you don't redo work)
 
