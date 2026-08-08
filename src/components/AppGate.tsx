@@ -5,10 +5,10 @@
  */
 import React, { useMemo, useState } from 'react';
 
-const STORAGE_KEY = 'pangea-demo-gate-v2';
+const STORAGE_KEY = 'pangea-demo-gate-v3';
 
 /** Demo unlock password for tomorrow. Change anytime before sharing the link. */
-export const DEMO_GATE_PASSWORD = 'OmniVeo-Private-4411';
+export const DEMO_GATE_PASSWORD = 'PangeaDemo2026';
 
 async function sha256(text: string): Promise<string> {
   const data = new TextEncoder().encode(text);
