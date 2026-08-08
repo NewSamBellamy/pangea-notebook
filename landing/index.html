@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pangea — Your project, bound like a book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Caveat:wght@500..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif; color: #e8ddc8; min-height: 100vh;
+    background:
+      radial-gradient(1100px 600px at 50% -8%, rgba(255,200,120,.12), transparent 60%),
+      repeating-linear-gradient(90deg, rgba(0,0,0,.12) 0 2px, transparent 2px 90px),
+      linear-gradient(180deg, #2b1d12, #170d07);
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 60px 28px 80px; text-align: center; }
+  .brand { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+  .logo { width: 44px; height: 44px; border-radius: 9px; display: grid; place-items: center; font-family: 'Fraunces', serif; font-weight: 800; font-size: 24px; color: #241a08; background: linear-gradient(160deg, #e8c574, #c9a24b); box-shadow: 0 4px 18px rgba(201,162,75,.4); }
+  .brand span { font-family: 'Fraunces', serif; font-size: 21px; letter-spacing: .5px; }
+
+  /* hero book */
+  .bookscene { perspective: 1400px; margin: 8px auto 38px; width: 300px; height: 210px; }
+  .book { position: relative; width: 100%; height: 100%; transform: rotateX(24deg) rotateZ(-3deg); transform-style: preserve-3d; }
+  .leafL, .leafR { position: absolute; top: 0; bottom: 0; width: 50%; background: linear-gradient(180deg, #f7f1e3, #e9dfc8); box-shadow: 0 24px 50px rgba(0,0,0,.6); }
+  .leafL { left: 0; border-radius: 8px 2px 2px 8px; transform: rotateY(9deg); transform-origin: right; }
+  .leafR { right: 0; border-radius: 2px 8px 8px 2px; transform: rotateY(-9deg); transform-origin: left; }
+  .leafL::after, .leafR::after { content: ''; position: absolute; inset: 16px 14px; background: repeating-linear-gradient(180deg, transparent 0 9px, rgba(120,95,50,.25) 9px 10px); }
+  .leafL::before { content: ''; position: absolute; left: 20px; top: 22px; width: 55%; height: 12px; background: rgba(160,60,40,.5); border-radius: 3px; transform: rotate(-1deg); }
+  .gut { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 22px; margin-left: -11px; background: linear-gradient(90deg, transparent, rgba(30,18,6,.55), transparent); }
+
+  h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: clamp(34px, 6vw, 58px); line-height: 1.08; color: #f5ead2; }
+  h1 em { font-style: italic; color: #e8c574; }
+  .sub { font-family: 'EB Garamond', serif; font-size: clamp(17px, 2.4vw, 21px); color: #c4b394; max-width: 640px; margin: 20px auto 0; line-height: 1.6; }
+
+  .cta { margin: 40px auto 14px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .cta input {
+    width: min(340px, 80vw); padding: 14px 18px; border-radius: 10px;
+    border: 1px solid rgba(232,197,116,.4); background: rgba(255,252,242,.08); color: #f5ead2;
+    font-size: 15px; font-family: 'Inter', sans-serif;
+  }
+  .cta input::placeholder { color: #9a8a68; }
+  .cta input:focus { outline: 2px solid #c9a24b; }
+  .cta button {
+    padding: 14px 26px; border-radius: 10px; border: none; cursor: pointer;
+    background: linear-gradient(180deg, #e8c574, #c9a24b); color: #241a08; font-weight: 700; font-size: 15px;
+    box-shadow: 0 4px 18px rgba(201,162,75,.35);
+  }
+  .cta button:hover { transform: translateY(-1px); }
+  .fine { font-size: 12.5px; color: #8a7a5f; }
+  .thanks { display: none; font-family: 'Caveat', cursive; font-size: 26px; color: #e8c574; margin-top: 10px; }
+
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 70px; text-align: left; }
+  .card { background: rgba(255,252,242,.05); border: 1px solid rgba(232,197,116,.18); border-radius: 12px; padding: 24px 22px; }
+  .card h3 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px; color: #f0e2c0; margin-bottom: 8px; }
+  .card p { font-size: 13.5px; line-height: 1.6; color: #b8a888; }
+  .card .k { color: #e8c574; }
+
+  .foot { margin-top: 70px; font-size: 12.5px; color: #8a7a5f; line-height: 1.9; }
+  .foot a { color: #c9a24b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><span class="logo">P</span><span>Pangea</span></div>
+
+  <div class="bookscene"><div class="book"><div class="leafL"></div><div class="leafR"></div><div class="gut"></div></div></div>
+
+  <h1>Your whole project,<br/><em>bound like a book.</em></h1>
+  <p class="sub">For filmmakers and every kind of creator. Plan it in one conversation, let the agent bind it into a living book — then read, mark it up in red ink, talk through your edits out loud, and watch the pages rewrite themselves. Your research, notes, and vision finally live in one place: the current state of the work.</p>
+
+  <form class="cta" id="signup">
+    <input type="email" id="email" required placeholder="you@example.com" />
+    <button type="submit">Get early access →</button>
+  </form>
+  <p class="fine">Free. Local-first. Bring your own AI key. No account, no server, no lock-in.</p>
+  <p class="thanks" id="thanks">You’re on the list — welcome aboard the Argo. ⚓</p>
+
+  <div class="row">
+    <div class="card"><h3>📖 A real bookshelf</h3><p>Every project is a book on your shelf — title on the spine, your palette, your typeface. Open it to a two-page spread: <span class="k">the canvas</span> on the left, <span class="k">your editor-in-residence</span> on the right.</p></div>
+    <div class="card"><h3>✒ Plan first, then bind</h3><p>One prompt or a proper interview — the agent researches the best structure for <em>your</em> project and lays out 12–20 pages, images and all, before a word is drafted.</p></div>
+    <div class="card"><h3>🖍 Read sessions</h3><p>Grab the red pen, mark the page while you talk. Your ink and your voice are synced — end the session and the agent audits the page and rewrites it to your notes.</p></div>
+    <div class="card"><h3>⚑ Notes that wait for you</h3><p>Pin a thought to any page. Open notes surface on the cover as your task list, so you always know what still needs ironing out.</p></div>
+    <div class="card"><h3>🎨 Draw on the images</h3><p>Circle what’s wrong — “his ears need to be bigger” — and the image regenerates in place, on model, on palette.</p></div>
+    <div class="card"><h3>🧠 Brain dump</h3><p>Paste months of scattered notes. The agent reads the whole book and files every thought onto the right page.</p></div>
+  </div>
+
+  <p class="foot">
+    Free & open source — grab it on <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a> (link coming with the repo).<br/>
+    Local-first: your books and your API key never leave your device.
+  </p>
+</div>
+<script>
+  // Email capture: set FORM_ENDPOINT to a Formspree/Basin endpoint to collect for real.
+  // Until then, emails are stored locally (kiosk mode) and can be exported from the console:
+  //   JSON.parse(localStorage.getItem('yok-signups'))
+  var FORM_ENDPOINT = '';
+  document.getElementById('signup').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = document.getElementById('email').value.trim();
+    if (!email) return;
+    if (FORM_ENDPOINT) {
+      fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ email: email }) }).catch(function () {});
+    }
+    try {
+      var list = JSON.parse(localStorage.getItem('yok-signups') || '[]');
+      list.push({ email: email, at: new Date().toISOString() });
+      localStorage.setItem('yok-signups', JSON.stringify(list));
+    } catch (err) {}
+    document.getElementById('signup').style.display = 'none';
+    document.getElementById('thanks').style.display = 'block';
+  });
+</script>
+</body>
+</html>
