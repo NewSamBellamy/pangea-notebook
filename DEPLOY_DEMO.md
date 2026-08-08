@@ -2,14 +2,14 @@
 
 ## Live URLs
 
-- **Pangea app (password gated):** https://newsambellamy.github.io/pangea-notebook/
-- **Landing page source:** https://github.com/NewSamBellamy/Hidden-Door-Landing-Page
-- **App source:** https://github.com/NewSamBellamy/pangea-notebook
-- **GitHub profile:** https://github.com/NewSamBellamy
+- **Landing page (public QR target):** https://newsambellamy.github.io/Hidden-Door-Landing-Page/
+- **Pangea app (invite-only demo):** https://newsambellamy.github.io/pangea-notebook/
 
-## Enable GitHub Pages for the app (required once)
+Do **not** put the app demo password in this repository or any public doc.
 
-In `NewSamBellamy/pangea-notebook`:
+## GitHub Pages (app)
+
+In `pangea-notebook`:
 
 1. **Settings → Pages**
 2. Source: **Deploy from a branch**
@@ -17,51 +17,33 @@ In `NewSamBellamy/pangea-notebook`:
 4. Folder: **`/ (root)`**
 5. Save
 
-Wait 1–3 minutes, then open:
-`https://newsambellamy.github.io/pangea-notebook/`
+Wait 1–3 minutes, then open the app URL above.
 
-### Demo unlock password
+## Demo unlock password
 
+Stored **only** with the demo host (not in git).
+
+Set / rotate it in `src/components/AppGate.tsx`, then:
+
+```bash
+npm install
+npm run build
+# deploy dist/ to gh-pages branch
 ```
-PangeaDemo2026
-```
 
-Change it in `src/components/AppGate.tsx` before broader sharing.
+## Keep source private while Pages stays public
 
-## Keep source private while Pages stays public (important)
+On **GitHub Free** personal accounts, making a repo private can **unpublish** public Pages.
 
-On **GitHub Free personal accounts**:
+Safer options:
 
-- GitHub Pages for a **public site** generally needs a **public repository**.
-- If you set `pangea-notebook` to **private**, the Pages site can stop being publicly servable on Free.
-
-### Recommended setup for tomorrow
-
-1. Keep a **public deploy branch/repo surface** for the built site (`gh-pages` content), password-gated in-app.
-2. Keep unfinished source less exposed by:
-   - not advertising the repo
-   - scrubbing README/HANDOFF of internal notes
-   - using the app password gate
-3. If you need true private source + public Pages long-term, use one of:
-   - a separate public **deploy-only** repo that contains only `index.html` (no source)
-   - GitHub Pro / org plan features
-
-For tomorrow, the practical path is:
-
-- Pages site public + **app password**
-- Source repo can remain public but unlinked/unadvertised, or move source private after creating a deploy-only public repo
+1. **Tomorrow (safest):** keep deploy surfaces stable; do not flip visibility mid-event; QR only the landing page.
+2. **Long-term:** GitHub Pro (private source + public Pages), **or** a public deploy-only repo that contains built static files only.
 
 ## Landing page note
 
-`Hidden-Door-Landing-Page` currently includes a client-side gate password in page JavaScript (`TetCorp`).  
-That is visible to anyone who views page source. Rotate it if that landing page is shared widely.
+The Hidden Door landing gate is a client-side booth password. It unlocks marketing content only — not the Pangea app, not Supabase user data.
 
 ## Supabase
 
-App cloud backend: project **Pangea** (`rlqfxfthzgukejcfnhug`).
-
-Before demo:
-- Auth email confirmations configured the way you want
-- Test account signed in once
-- Click **Save now**
-- Refresh and confirm books + API key restore
+Configure auth and test sign-in before the event. Do not commit API secrets to git.
